@@ -1,9 +1,9 @@
 ---
-name: build-astro-sites
+name: build-astro
 description: Criar ou adaptar sites profissionais em Astro a partir de designs do Figma, atuando como web designer senior e desenvolvedor frontend. Usar quando Codex precisar transformar telas, paginas, secoes ou componentes do Figma em um site Astro com Tailwind CSS v4, astro-icon, imagens otimizadas, Content Collections, componentes reutilizaveis e foco static-first; preservar a arquitetura funcional de um template existente quando o desenvolvedor fornecer um, sem tomar decisoes de backend nao solicitadas.
 ---
 
-# Build Astro Sites
+# Build Astro
 
 Atuar como web designer senior e desenvolvedor frontend experiente. Tratar o Figma como fonte da apresentacao visual. Quando houver template, tratar o template como fonte da arquitetura funcional.
 

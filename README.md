@@ -1,6 +1,6 @@
-# Build Astro Sites
+# Build Astro
 
-`build-astro-sites` é uma skill para o Codex implementar interfaces do Figma em projetos Astro. Ela pode criar a estrutura visual de um site novo ou adaptar um projeto existente sem reescrever a lógica que já funciona.
+`build-astro` é uma skill para o Codex implementar interfaces do Figma em projetos Astro. Ela pode criar a estrutura visual de um site novo ou adaptar um projeto existente sem reescrever a lógica que já funciona.
 
 O Figma orienta a apresentação visual. Quando um template é fornecido, o código existente orienta a arquitetura funcional: layouts, CMS, busca, listings, páginas de conteúdo, rotas, SEO e contratos de dados são preservados sempre que possível.
 
@@ -40,17 +40,17 @@ Peça ao Codex para instalar diretamente a pasta da skill:
 
 ```text
 Use $skill-installer para instalar esta skill:
-https://github.com/criativiarte/build-astro-sites-skill/tree/main/skills/build-astro-sites
+https://github.com/criativiarte/build-astro-sites-skill/tree/main/skills/build-astro
 ```
 
 Se a skill não aparecer após a instalação, reinicie o Codex.
 
 ### Instalação manual para o usuário
 
-Copie `skills/build-astro-sites` deste repositório para:
+Copie `skills/build-astro` deste repositório para:
 
 ```text
-$HOME/.agents/skills/build-astro-sites
+$HOME/.agents/skills/build-astro
 ```
 
 No Windows, `$HOME` normalmente corresponde a `C:\Users\SEU-USUARIO`.
@@ -63,7 +63,7 @@ Para disponibilizar a skill apenas em um repositório, copie-a para:
 seu-projeto/
 └── .agents/
     └── skills/
-        └── build-astro-sites/
+        └── build-astro/
             ├── SKILL.md
             ├── agents/
             └── references/
@@ -76,7 +76,7 @@ O Codex detecta skills em `.agents/skills` quando trabalha dentro do projeto.
 Invoque a skill pelo nome e informe, no mínimo, o arquivo do Figma, o projeto de destino e as páginas ou seções desejadas:
 
 ```text
-Use $build-astro-sites para implementar este design em Astro.
+Use $build-astro para implementar este design em Astro.
 
 Figma: <URL_DO_FIGMA>
 Projeto: <CAMINHO_DO_PROJETO>
@@ -97,7 +97,7 @@ Para obter um resultado mais previsível, também informe:
 Quando não houver projeto-base, deixe isso explícito:
 
 ```text
-Use $build-astro-sites para criar em Astro o layout deste Figma.
+Use $build-astro para criar em Astro o layout deste Figma.
 
 Figma: <URL_DO_FIGMA>
 Projeto: <CAMINHO_DO_NOVO_PROJETO>
@@ -112,7 +112,7 @@ Se nenhuma versão for definida, a skill consulta e utiliza a versão estável m
 Quando houver um template ou projeto existente, informe sua localização e o que precisa ser preservado:
 
 ```text
-Use $build-astro-sites para aplicar este Figma ao projeto existente.
+Use $build-astro para aplicar este Figma ao projeto existente.
 
 Figma: <URL_DO_FIGMA>
 Projeto: <CAMINHO_DO_PROJETO>
