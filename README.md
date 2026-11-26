@@ -22,7 +22,15 @@ Para instalar manualmente, copie a pasta inteira, com `SKILL.md`, `agents/`, `re
 
 ## Uso
 
-Abra o workspace no Codex e envie o link do Figma. Indique o escopo se quiser adaptar uma página ou seção de um projeto existente:
+Para iniciar um site, abra o workspace no Codex e envie:
+
+```text
+$build-astro start
+```
+
+O Codex pede apenas o link do Figma. Você também pode enviá-lo junto com o comando. A skill usa o design e a base para definir as páginas, os componentes e o conteúdo que vale expor no CMS. Se não houver um destino indicado, o site novo fica em uma pasta dedicada no workspace.
+
+Para adaptar uma página ou seção em um projeto existente, indique diretamente o escopo:
 
 ```text
 Use $build-astro para implementar a página inicial em Astro.

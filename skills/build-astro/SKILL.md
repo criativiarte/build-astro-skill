@@ -1,11 +1,19 @@
 ---
 name: build-astro
-description: Criar ou adaptar sites Astro a partir de designs do Figma. Use para implementar páginas e componentes acessíveis e responsivos, com starter estático incluído para sites novos.
+description: Criar sites Astro com o comando start a partir de um link do Figma ou adaptar páginas e componentes em um projeto Astro existente. Use para converter designs em código Astro acessível e responsivo, com starter estático incluído para sites novos.
 ---
 
 # Build Astro
 
 Atue como web designer sênior e desenvolvedor frontend. Use o Figma como referência visual. Em projetos existentes, preserve os contratos e o comportamento registrados no código. Siga o escopo do desenvolvedor e ajuste decisões visuais que prejudiquem a acessibilidade.
+
+## Iniciar projeto
+
+- Acione este fluxo com `$build-astro start` ou quando o desenvolvedor pedir um site novo a partir do Figma. Se ainda não houver link nem pedido explícito para usar outro material como design, pergunte “Qual é o link do Figma?” e aguarde. Se o link já estiver no contexto, avance direto.
+- Identifique os frames de produção seguindo [Figma e design system](references/figma-design-system.md). Quando houver um frame e um escopo explícitos, mantenha o trabalho nesse recorte. Para o arquivo inteiro, use navegação, nomes e hierarquia para distinguir páginas de componentes, estados e variantes responsivas.
+- Derive páginas, hierarquia, componentes, tokens, responsividade e conteúdo editável do Figma. Organize a implementação seguindo a estrutura e as convenções do template efetivamente adotado. Aplique decisões reversíveis e siga para a implementação sem formulário de descoberta ou aprovação adicional do plano. Registre as suposições relevantes na entrega.
+- Crie o site no destino vazio indicado ou em uma pasta dedicada e disponível no workspace, com nome derivado do projeto. Use o starter empacotado na skill, conforme [Escolha da base e arquitetura](references/template-architecture.md). A presença de outro app Astro no workspace não o torna destino do `start`. Adapte um projeto existente somente quando o pedido tiver esse escopo.
+- Se algum dado de produção estiver ausente, avance com o que o design sustentar. Deixe integrações dependentes de credenciais, URLs externas, envio de formulários ou dados legais pendentes quando não houver configuração válida. Peça ajuda apenas para um bloqueio concreto que o Figma, a base empacotada ou o workspace não resolvam, como falta de acesso ao design.
 
 ## Entender o trabalho
 
