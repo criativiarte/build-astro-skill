@@ -8,6 +8,14 @@
 - Se o starter estiver ausente na instalação, informe que o pacote está incompleto e indique a reinstalação com a pasta `assets/` incluída. Para um site criado explicitamente sem a base, siga as convenções Astro da skill para preparar uma estrutura mínima.
 - Antes de copiar, confira se o destino está vazio, inclusive quanto a arquivos ocultos. Em workspace ocupado, escolha uma pasta que não entre nos globs de outros apps, workspaces ou pipelines. Em caso de colisão, use outro nome disponível se o caminho não foi especificado. Se o caminho explícito estiver ocupado ou não houver pasta isolada, preserve os arquivos e resolva apenas o destino antes de escrever.
 
+## Preparar o histórico Git
+
+- Confira a raiz Git que cobre o destino (`git rev-parse --show-toplevel`) e registre o estado inicial de arquivos e do índice. Reaproveite o repositório correto, inclusive em monorepos e worktrees. Se o projeto não estiver em um repositório, execute `git init` na raiz do projeto assim que o destino existir. Não crie repositório aninhado sem pedido explícito.
+- Planeje commits por propósito e faça o primeiro assim que houver uma base utilizável e verificada. Em sites novos, não registre a cópia bruta do starter com dados demonstrativos. Depois, faça um commit por etapa coerente. Agrupe arquivos que precisam mudar juntos, como schema, campos do CMS e consumidores de uma mesma coleção. Não concentre toda a implementação num commit final nem divida uma mudança só pelo tipo de arquivo.
+- Use Conventional Commits: `tipo(escopo): descrição`, com escopo opcional e assunto específico. Exemplos: `chore: initialize Astro project`, `feat(home): implement landing page`, `feat(cms): add project collection`, `fix(nav): preserve visible keyboard focus`. Siga o idioma e os escopos já usados pelo repositório, quando compatíveis.
+- Antes de cada commit, rode as verificações pertinentes, selecione apenas as mudanças da tarefa e inspecione o diff que será registrado. Preserve mudanças pré-existentes, inclusive as que já estavam no índice. Se não puder separar os conjuntos com segurança, não faça o commit e explique o bloqueio. Não inclua segredos, dependências instaladas ou saídas geradas que o projeto não versiona.
+- Use a identidade Git já configurada e respeite hooks e regras do projeto. Se identidade, permissões ou verificações bloquearem o commit, informe a pendência; não invente autor nem contorne os checks. Commits são locais: não configure remotos, não faça push nem reescreva histórico sem solicitação. Na entrega, informe os hashes criados ou por que não foi possível criá-los.
+
 ## Mapear o que preservar
 
 - Localize layouts como `BaseLayout` e `BaseHead`, componentes, CMS, Content Collections, busca, filtros, paginação, rotas e slugs, links, SEO, assets, integrações e modo de renderização relevantes. Verifique consumidores antes de alterar props, schemas, URLs ou contratos públicos.

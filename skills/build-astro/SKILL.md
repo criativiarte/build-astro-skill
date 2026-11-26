@@ -21,6 +21,7 @@ Atue como web designer sênior e desenvolvedor frontend. Use o Figma como refer�
 2. Leia [Figma e design system](references/figma-design-system.md) para obter o design pelo MCP remoto oficial ou trabalhar com material autorizado quando houver uma limitação de acesso.
 3. Leia [Escolha da base e arquitetura](references/template-architecture.md) para usar a base empacotada em sites novos e preservar os contratos de sites existentes. Leia [Convenções Astro](references/astro-conventions.md) para escolher as APIs compatíveis com a base.
 4. Tome decisões reversíveis com base no design e no código, como breakpoints intermediários, estados visuais previsíveis e composição. Avance com o que estiver claro e informe suposições relevantes. Faça uma pergunta focada quando faltar material essencial, houver destinos incompatíveis ou uma decisão de produto, migração ou backend for indispensável.
+5. Prepare o [histórico Git](references/template-architecture.md#preparar-o-histórico-git) antes de editar o projeto. Inicialize o Git no destino quando necessário e faça commits locais atômicos em Conventional Commits à medida que concluir cada etapa.
 
 ## Implementar
 
