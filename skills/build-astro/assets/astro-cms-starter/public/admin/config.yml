@@ -12,9 +12,8 @@ backend:
     uploadMedia: "chore(cms): adiciona mídia {{path}}"
     deleteMedia: "chore(cms): remove mídia {{path}}"
 
-# Troque pela URL pública do site antes do deploy:
-site_url: "https://seu-dominio.com"
-
+# Sem site_url, o link para o site usa a origem do painel.
+# Defina site_url se precisar apontar para uma origem pública diferente.
 # Título do CMS no login e na aba do navegador após o carregamento. Troque pelo título do site antes do deploy:
 app_title: "Painel | Título do Site"
 
