@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Script de exemplo",
+    "enabled": false,
+    "position": "head",
+    "code": "<script>\n  console.log(\"Script de exemplo carregado após o aceite de cookies.\");\n</script>"
+  }
+]

@@ -1,0 +1,26 @@
+---
+import Container from "@/components/layout/Container.astro";
+import { SITE_TITLE } from "@/consts";
+
+interface Props {
+  policyUrl?: string | null;
+}
+
+const { policyUrl } = Astro.props;
+const today = new Date();
+---
+
+<footer class="bg-surface border-line border-t">
+  <Container
+    class="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-4 py-6 text-muted text-sm"
+  >
+    <span>&copy; {today.getFullYear()} {SITE_TITLE}.</span>
+    {policyUrl && (
+      <nav aria-label="Links do rodapé" class="flex flex-wrap gap-x-6 gap-y-2">
+        <a class="inline-flex min-h-11 items-center hover:text-ink" href={policyUrl}>
+          Política de Privacidade
+        </a>
+      </nav>
+    )}
+  </Container>
+</footer>

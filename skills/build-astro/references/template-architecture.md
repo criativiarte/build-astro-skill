@@ -3,7 +3,10 @@
 ## Definir a base
 
 - Em uma adaptação, use o projeto Astro existente no destino pedido. Em monorepos, selecione o pacote que atende à rota ou seção solicitada. Preserve o gerenciador, o lockfile e as alterações já presentes.
-- Para um destino novo, use o template indicado quando houver. Caso contrário, monte a estrutura mínima em uma pasta vazia. Preserve os arquivos existentes e verifique o gerenciador, as versões e as instruções do projeto.
+- Para um destino novo, localize o [starter Astro CMS empacotado](../assets/astro-cms-starter/) relativo à pasta da skill instalada. Leia a [referência da base Astro CMS](astro-cms-template.md). Copie o conteúdo do starter para uma pasta vazia no workspace, incluindo `.gitignore` e `package-lock.json`. Confirme que origem e destino são distintos e aplique as mudanças no destino. O fluxo de criação usa somente os arquivos da própria skill como fonte da base.
+- Instale as dependências no destino com o gerenciador e o lockfile fornecidos. A base pode precisar do registro de pacotes e do provedor de fontes durante a preparação. O painel CMS só precisa de um repositório editorial quando for configurado para publicar conteúdo. A criação e o build local independem dessa conexão.
+- Se o starter estiver ausente na instalação, informe que o pacote está incompleto e indique a reinstalação com a pasta `assets/` incluída. Para um site criado explicitamente sem a base, siga as convenções Astro da skill para preparar uma estrutura mínima.
+- Antes de copiar, confira se o destino está vazio, inclusive quanto a arquivos ocultos. Em workspace ocupado, escolha uma pasta que não entre nos globs de outros apps, workspaces ou pipelines. Em caso de colisão, use outro nome disponível se o caminho não foi especificado. Se o caminho explícito estiver ocupado ou não houver pasta isolada, preserve os arquivos e resolva apenas o destino antes de escrever.
 
 ## Mapear o que preservar
 

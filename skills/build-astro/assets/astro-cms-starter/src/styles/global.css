@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* Gera todos os tokens, inclusive os usados diretamente pelos componentes. */
+@theme static {
+  --color-canvas: oklch(98.5% 0 none);
+  --color-surface: #fff;
+  --color-subtle: oklch(96.7% 0.001 286.375);
+  --color-ink: oklch(14.1% 0.005 285.823);
+  --color-body: oklch(44.2% 0.017 285.786);
+  --color-muted: oklch(55.2% 0.016 285.938);
+  --color-line: oklch(92% 0.004 286.32);
+  --color-line-hover: oklch(87.1% 0.006 286.286);
+  --color-action-hover: oklch(27.4% 0.006 286.033);
+  --color-inverse: #fff;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --container-site: 64rem;
+  --container-reading: 48rem;
+  --shadow-panel: 0 4px 16px rgb(0 0 0 / 4%);
+  --shadow-tooltip: 0 4px 24px rgb(0 0 0 / 4%);
+}
+
+/* Resolve as variáveis das fontes do Astro no elemento que usa a classe. */
+@theme inline {
+  --font-sans: var(--font-atkinson, system-ui), sans-serif;
+  --font-mono: var(--font-jetbrains-mono, ui-monospace), monospace;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply border-line;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply font-sans leading-relaxed;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [tabindex]
+  ):focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .site-container {
+    @apply mx-auto w-9/10 max-w-site;
+  }
+
+  .heading-base,
+  .heading-1,
+  .heading-2,
+  .heading-3 {
+    @apply font-semibold leading-tight tracking-normal text-ink;
+  }
+
+  .heading-1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  .heading-2 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  .heading-3 {
+    @apply text-xl md:text-2xl;
+  }
+
+  .button {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium leading-normal no-underline transition-colors;
+    transition-duration: 160ms;
+  }
+
+  .button-primary {
+    @apply border-ink bg-ink text-inverse hover:bg-action-hover;
+  }
+
+  .button-secondary {
+    @apply border-line bg-surface text-ink hover:bg-subtle hover:border-line-hover;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .button {
+      transition: none;
+    }
+  }
+}

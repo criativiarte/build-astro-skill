@@ -1,0 +1,13 @@
+---
+import PostListingPage from "@/components/posts/PostListingPage.astro";
+import { getPublishedPosts } from "@/utils/posts";
+
+const posts = await getPublishedPosts();
+---
+
+<PostListingPage
+  title="Posts"
+  description="Conteúdos de exemplo para conhecer a publicação e a organização dos posts no template."
+  heading="Posts"
+  posts={posts}
+/>

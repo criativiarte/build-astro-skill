@@ -1,0 +1,79 @@
+---
+import "@/styles/global.css";
+import { Font } from "astro:assets";
+import { getEntry } from "astro:content";
+import { SITE_LANG } from "@/consts";
+
+import Head, { type Props as HeadProps } from "@/components/seo/Head.astro";
+import Footer from "@/components/layout/Footer.astro";
+import Header from "@/components/layout/Header.astro";
+import WhatsAppButton from "@/components/WhatsAppButton.astro";
+import CookieBanner from "@/components/CookieBanner.astro";
+import ConsentScripts from "@/components/ConsentScripts.astro";
+import {
+  getPublishablePrivacyPolicy,
+  privacyPolicySlug,
+} from "@/utils/privacy-policy";
+
+export type Props = HeadProps;
+
+const props = Astro.props;
+
+const whatsappEntry = await getEntry("whatsapp", "whatsapp");
+
+if (!whatsappEntry) {
+  throw new Error(
+    "Configuração do WhatsApp não encontrada em src/content/whatsapp.json.",
+  );
+}
+
+const { enabled, ...whatsapp } = whatsappEntry.data;
+const scriptsEntry = await getEntry("scripts", "scripts");
+
+if (!scriptsEntry) {
+  throw new Error(
+    "Configuração de scripts não encontrada em src/content/scripts.json.",
+  );
+}
+
+const scripts = scriptsEntry.data.items.filter((item) => item.enabled);
+const policyUrl = (await getPublishablePrivacyPolicy())
+  ? `/${privacyPolicySlug}/`
+  : null;
+const requireConsent = policyUrl !== null;
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <Head {...props} />
+    <Font cssVariable="--font-atkinson" preload />
+    <Font cssVariable="--font-jetbrains-mono" />
+    <ConsentScripts {requireConsent}>
+      {scripts
+        .filter((item) => item.position === "head")
+        .map((item) => (
+          <Fragment set:html={item.code} />
+        ))}
+      <!-- Adicione aqui os scripts do head com is:inline. -->
+    </ConsentScripts>
+    <slot name="head" />
+  </head>
+  <body class="flex flex-col bg-canvas min-h-dvh text-ink antialiased">
+    <ConsentScripts {requireConsent}>
+      {scripts
+        .filter((item) => item.position === "body")
+        .map((item) => (
+          <Fragment set:html={item.code} />
+        ))}
+      <!-- Adicione aqui os scripts do body com is:inline. -->
+    </ConsentScripts>
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer {policyUrl} />
+    {requireConsent && <CookieBanner {policyUrl} />}
+    {enabled && <WhatsAppButton {...whatsapp} />}
+  </body>
+</html>

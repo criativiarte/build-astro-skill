@@ -1,0 +1,34 @@
+{
+  "controllerName": "",
+  "controllerRegistration": "",
+  "controllerAddress": "",
+  "contactEmail": "",
+  "lastUpdated": "",
+  "forms": [],
+  "trackingServices": [
+    {
+      "name": "Google Analytics",
+      "enabled": false,
+      "purpose": "Análise de audiência, navegação e desempenho do site.",
+      "privacyUrl": "https://policies.google.com/privacy?hl=pt-BR"
+    },
+    {
+      "name": "Google Tag Manager",
+      "enabled": false,
+      "purpose": "Gerenciamento e carregamento das tags configuradas no site.",
+      "privacyUrl": "https://support.google.com/tagmanager/answer/9323295?hl=pt-BR"
+    },
+    {
+      "name": "Google Ads",
+      "enabled": false,
+      "purpose": "Mensuração de conversões e avaliação de campanhas publicitárias.",
+      "privacyUrl": "https://policies.google.com/privacy?hl=pt-BR"
+    },
+    {
+      "name": "Meta Pixel",
+      "enabled": false,
+      "purpose": "Mensuração de campanhas e formação de públicos para publicidade.",
+      "privacyUrl": "https://www.facebook.com/privacy/policy/"
+    }
+  ]
+}

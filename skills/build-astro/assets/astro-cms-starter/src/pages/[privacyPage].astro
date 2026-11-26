@@ -1,0 +1,475 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/layout/Container.astro";
+import { getPublishablePrivacyPolicy, privacyPolicySlug } from "@/utils/privacy-policy";
+
+const title = "Política de Privacidade";
+const description =
+  "Saiba como os dados pessoais são tratados, quais são seus direitos e como entrar em contato com o responsável por este site.";
+
+export async function getStaticPaths() {
+  const policy = await getPublishablePrivacyPolicy();
+  return policy ? [{ params: { privacyPage: privacyPolicySlug }, props: { policy } }] : [];
+}
+
+const { policy } = Astro.props;
+const hasForms = policy.forms.length > 0;
+
+const activeTrackingServices = policy.trackingServices.filter(
+  (service) => service.enabled,
+);
+
+const lastUpdatedLabel = new Intl.DateTimeFormat("pt-BR", {
+  dateStyle: "long",
+  timeZone: "UTC",
+}).format(new Date(`${policy.lastUpdated}T00:00:00Z`));
+---
+
+<Layout {title} {description}>
+  <Container class="py-16 md:py-20">
+    <article class="mx-auto max-w-reading">
+      <header class="space-y-5">
+        <p class="font-semibold text-muted text-sm uppercase tracking-wide">
+          Privacidade e proteção de dados
+        </p>
+        <h1 class="heading-1">{title}</h1>
+        <p class="text-body text-lg">
+          Esta Política informa como os dados pessoais são tratados no acesso a
+          este site e no contato com seu responsável, bem como os direitos dos
+          titulares e os meios disponíveis para exercê-los.
+        </p>
+        <p class="text-muted text-sm">
+          Última atualização:{" "}
+          <time datetime={policy.lastUpdated}>{lastUpdatedLabel}</time>
+        </p>
+      </header>
+
+      <div class="mt-10 policy-content">
+        <section aria-labelledby="responsavel">
+          <h2 id="responsavel">
+            1. Identificação do controlador e abrangência
+          </h2>
+          <p>
+            <strong>{policy.controllerName}</strong> é o controlador dos dados
+            pessoais tratados no âmbito deste site, nos termos da Lei nº
+            13.709/2018, a Lei Geral de Proteção de Dados Pessoais (LGPD).
+            Compete ao controlador definir as finalidades e os meios de
+            tratamento, observadas as disposições legais aplicáveis.
+          </p>
+          <ul>
+            {policy.controllerRegistration && (
+              <li>
+                <strong>Identificação cadastral:</strong>{" "}
+                {policy.controllerRegistration}.
+              </li>
+            )}
+            {policy.controllerAddress && (
+              <li>
+                <strong>Endereço para contato:</strong>{" "}
+                {policy.controllerAddress}.
+              </li>
+            )}
+            <li>
+              <strong>Canal de privacidade:</strong> {policy.contactEmail}.
+            </li>
+          </ul>
+          <p>
+            Esta Política abrange a navegação pelas páginas e as comunicações
+            iniciadas pelos canais aqui divulgados. Serviços de terceiros
+            acessados por links possuem regras próprias, sem prejuízo das
+            responsabilidades que a legislação atribui a cada agente de
+            tratamento.
+          </p>
+        </section>
+
+        <section aria-labelledby="dados">
+          <h2 id="dados">2. Dados pessoais tratados e formas de coleta</h2>
+          <p>
+            O tratamento limita-se aos dados pertinentes às finalidades
+            informadas e pode compreender as seguintes categorias, conforme a
+            interação realizada:
+          </p>
+          <ul>
+            <li>
+              <strong>Dados fornecidos pelo titular:</strong> nome, telefone,
+              endereço de e-mail e informações incluídas em mensagens, pedidos
+              de informação ou solicitações encaminhadas aos canais de
+              atendimento.
+            </li>
+            <li>
+              <strong>Registros técnicos de acesso:</strong> endereço IP, data e
+              horário, páginas solicitadas e características do navegador ou
+              dispositivo, conforme os registros mantidos pela infraestrutura de
+              hospedagem para operação e segurança.
+            </li>
+            <li>
+              <strong>Preferências de privacidade:</strong> a escolha sobre
+              cookies opcionais é registrada no armazenamento local do
+              navegador, para que seja respeitada nas próximas visitas nesse
+              navegador.
+            </li>
+            <li>
+              <strong>Dados de navegação e publicidade:</strong> quando os
+              serviços indicados na seção 4 estiverem em uso e houver
+              autorização, poderão ser tratados identificadores, páginas
+              visitadas, interações e informações de campanhas.
+            </li>
+          </ul>
+          <p>
+            Não é necessário fornecer dados de contato para ler o conteúdo
+            público do site. O envio de informações pelos canais de atendimento
+            deve se restringir ao necessário para a solicitação; evite
+            encaminhar dados sensíveis ou de terceiros sem necessidade e
+            fundamento adequado.
+          </p>
+        </section>
+
+        <section aria-labelledby="finalidades">
+          <h2 id="finalidades">3. Finalidades e bases legais</h2>
+          <p>
+            Cada operação de tratamento deve estar vinculada a uma finalidade
+            determinada e a uma hipótese legal adequada. Conforme o contexto, os
+            dados poderão ser utilizados para:
+          </p>
+          <ul>
+            <li>
+              <strong>Atender solicitações e pedidos comerciais:</strong>
+              responder dúvidas e adotar providências solicitadas pelo titular,
+              com fundamento na execução de contrato ou de procedimentos
+              preliminares relacionados a contrato, quando aplicável.
+            </li>
+            <li>
+              <strong>Operar e proteger o site:</strong> assegurar sua
+              disponibilidade, apurar falhas e prevenir acessos indevidos, com
+              fundamento em legítimo interesse, quando cabível, mediante
+              avaliação da necessidade do tratamento e dos direitos e
+              expectativas do titular.
+            </li>
+            <li>
+              <strong>Cumprir deveres legais e resguardar direitos:</strong>
+              atender determinações de autoridades e obrigações legais ou
+              regulatórias, bem como produzir elementos necessários ao exercício
+              regular de direitos em processos judiciais, administrativos ou
+              arbitrais.
+            </li>
+            <li>
+              <strong>Analisar audiência e mensurar publicidade:</strong>
+              utilizar as tecnologias opcionais informadas nesta Política, com
+              fundamento no consentimento obtido pelo painel de cookies.
+            </li>
+          </ul>
+          <p>
+            A navegação pelo site, isoladamente, não constitui consentimento
+            para rastreamento opcional ou envio de comunicações promocionais.
+            Dados de contato não serão utilizados para finalidade incompatível
+            sem a informação ao titular e o fundamento legal correspondente.
+          </p>
+        </section>
+
+        <section aria-labelledby="cookies">
+          <h2 id="cookies">
+            4. Cookies, armazenamento local e serviços de terceiros
+          </h2>
+          <p>
+            Cookies e mecanismos semelhantes permitem guardar informações no
+            navegador ou reconhecer interações com o site. O armazenamento da
+            preferência de privacidade é utilizado para registrar a escolha do
+            visitante e não depende da autorização para cookies de análise ou
+            publicidade.
+          </p>
+          <p>
+            No painel de cookies, <strong>Aceitar</strong> autoriza o
+            carregamento dos scripts opcionais informados nesta seção;{" "}
+            <strong>Recusar</strong>
+            mantém esses scripts bloqueados, sem impedir o acesso ao conteúdo. A
+            escolha pode ser alterada pelo botão{" "}
+            <strong>Preferências de cookies</strong>, identificado pelo ícone de
+            escudo no canto da tela.
+          </p>
+          {activeTrackingServices.length > 0 ? (
+            <>
+              <p>
+                Os seguintes serviços opcionais são utilizados, mediante
+                consentimento:
+              </p>
+              <ul>
+                {activeTrackingServices.map((service) => (
+                  <li>
+                    <strong>{service.name}:</strong> {service.purpose} Consulte
+                    a{" "}
+                    <a href={service.privacyUrl}>
+                      política de privacidade do fornecedor
+                    </a>
+                    .
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p>
+              Na configuração atual, não são utilizados serviços de análise de
+              audiência ou publicidade, como Google Analytics, Google Ads ou
+              Meta Pixel. O registro da preferência de cookies permanece
+              disponível no próprio navegador.
+            </p>
+          )}
+          <p>
+            A preferência permanece registrada até que seja alterada ou que os
+            dados do site sejam excluídos do navegador. Retirar o consentimento
+            interrompe novos carregamentos dos scripts opcionais, mas não apaga
+            automaticamente cookies existentes nem dados já enviados. É possível
+            excluir cookies pelas configurações do navegador e solicitar a
+            eliminação de dados pelo canal de privacidade, nas hipóteses legais.
+          </p>
+          <p>
+            Ao iniciar uma conversa pelo WhatsApp, o titular passa a utilizar um
+            serviço externo, sujeito à
+            <a href="https://www.whatsapp.com/legal/privacy-policy">
+              Política de Privacidade do WhatsApp
+            </a>
+            . As fontes do site são servidas pela própria hospedagem; seu
+            carregamento não exige conexão do navegador com o Google Fonts.
+          </p>
+        </section>
+
+        <section aria-labelledby="compartilhamento">
+          <h2 id="compartilhamento">
+            5. Compartilhamento e transferências internacionais
+          </h2>
+          <p>
+            Os dados poderão ser compartilhados com prestadores necessários à
+            hospedagem, segurança e comunicação, na medida exigida para a
+            execução desses serviços; com autoridades, quando houver dever legal
+            ou determinação válida; e com assessores ou representantes, quando
+            necessário ao exercício regular de direitos.
+          </p>
+          <p>
+            O acesso de fornecedores deve se limitar às finalidades contratadas
+            e estar sujeito a obrigações de confidencialidade, segurança e
+            proteção de dados compatíveis com sua atuação. Serviços que definam
+            finalidades próprias também respondem pelas operações sob sua
+            responsabilidade.
+          </p>
+          <p>
+            Alguns serviços, incluindo o WhatsApp e os provedores de análise ou
+            publicidade quando utilizados, podem envolver armazenamento ou
+            acesso a dados no exterior. Transferências internacionais sob nossa
+            responsabilidade deverão observar os mecanismos admitidos pela LGPD
+            e pela regulamentação da ANPD, como decisões de adequação ou
+            cláusulas contratuais aplicáveis. Informações sobre os destinatários
+            e as garantias utilizadas podem ser solicitadas pelo canal de
+            privacidade.
+          </p>
+        </section>
+
+        <section aria-labelledby="conservacao">
+          <h2 id="conservacao">
+            6. Prazo de conservação e término do tratamento
+          </h2>
+          <p>
+            Os dados serão conservados pelo tempo necessário ao atendimento da
+            finalidade que justificou sua coleta, considerando a natureza da
+            solicitação, a relação mantida com o titular, os prazos legais e
+            regulatórios e a necessidade de exercício regular de direitos.
+          </p>
+          <p>
+            Encerrada a finalidade ou verificada outra hipótese de término do
+            tratamento, os dados serão eliminados ou anonimizados, salvo quando
+            a conservação for autorizada ou exigida por lei. Pedidos de
+            eliminação serão analisados conforme a base legal e as obrigações
+            aplicáveis, e eventual necessidade de retenção será informada ao
+            titular.
+          </p>
+        </section>
+
+        <section aria-labelledby="seguranca">
+          <h2 id="seguranca">7. Segurança e resposta a incidentes</h2>
+          <p>
+            O tratamento deve observar medidas técnicas e administrativas
+            adequadas à natureza dos dados e aos riscos envolvidos, destinadas a
+            prevenir acesso não autorizado, perda, alteração e divulgação
+            indevida. Essas medidas não representam garantia absoluta de
+            inviolabilidade dos sistemas ou de inexistência de incidentes.
+          </p>
+          <p>
+            Eventuais incidentes serão avaliados para contenção e mitigação de
+            seus efeitos. Quando houver risco ou dano relevante aos titulares,
+            serão realizadas as comunicações à ANPD e aos titulares afetados,
+            observados os critérios, prazos e procedimentos da regulamentação
+            aplicável. Suspeitas de uso indevido podem ser encaminhadas ao canal
+            de privacidade.
+          </p>
+        </section>
+
+        <section aria-labelledby="direitos">
+          <h2 id="direitos">
+            8. Direitos dos titulares e canal de atendimento
+          </h2>
+          <p>
+            Mediante solicitação e observadas as condições previstas na LGPD, o
+            titular poderá exercer gratuitamente os seguintes direitos:
+          </p>
+          <ul>
+            <li>
+              Confirmação da existência de tratamento e acesso aos dados
+              pessoais.
+            </li>
+            <li>Correção de dados incompletos, inexatos ou desatualizados.</li>
+            <li>
+              Anonimização, bloqueio ou eliminação de dados desnecessários,
+              excessivos ou tratados em desconformidade com a legislação.
+            </li>
+            <li>
+              Portabilidade a outro fornecedor, mediante requisição expressa,
+              nos termos da regulamentação e preservados os segredos comercial e
+              industrial.
+            </li>
+            <li>
+              Informação sobre as entidades públicas e privadas com as quais
+              houve uso compartilhado de dados.
+            </li>
+            <li>
+              Informação sobre a possibilidade de não fornecer consentimento e
+              as consequências da negativa.
+            </li>
+            <li>
+              Revogação do consentimento e eliminação dos dados tratados com
+              essa base, ressalvadas as hipóteses legais de conservação.
+            </li>
+            <li>
+              Oposição ao tratamento realizado com dispensa de consentimento, em
+              caso de descumprimento da LGPD.
+            </li>
+            <li>
+              Revisão de decisões tomadas unicamente com base em tratamento
+              automatizado que afetem seus interesses, quando houver, e
+              informações sobre os critérios e procedimentos utilizados.
+            </li>
+          </ul>
+          <p>
+            As solicitações devem ser encaminhadas a{" "}
+            <strong>{policy.contactEmail}</strong>, com a descrição do pedido.
+            Poderão ser solicitadas informações proporcionais para confirmar a
+            identidade do titular ou os poderes de seu representante, evitando a
+            entrega de dados a pessoas não autorizadas.
+          </p>
+          <p>
+            O atendimento observará os prazos e as formas previstos na
+            legislação e na regulamentação. Se o pedido não puder ser atendido,
+            serão informados os motivos e, quando pertinente, os meios
+            disponíveis para sua continuidade. O titular também poderá
+            peticionar perante a ANPD e recorrer aos órgãos de defesa do
+            consumidor, quando cabível.
+          </p>
+        </section>
+
+        <section aria-labelledby="menores">
+          <h2 id="menores">9. Dados de crianças e adolescentes</h2>
+          <p>
+            O conteúdo e os canais deste site não são direcionados
+            especificamente a crianças e adolescentes. Caso haja tratamento de
+            dados desse público, deverão ser observados seu melhor interesse e
+            os requisitos legais aplicáveis, inclusive quanto à participação de
+            pais ou responsáveis quando exigida.
+          </p>
+          <p>
+            Pais ou responsáveis que identifiquem o envio de dados de crianças
+            ou adolescentes poderão utilizar o canal de privacidade para
+            solicitar informações e as providências cabíveis.
+          </p>
+        </section>
+
+        {hasForms && (
+          <section aria-labelledby="formularios">
+            <h2 id="formularios">10. Tratamento de dados em formulários</h2>
+            <p>
+              Ao enviar um formulário neste site, o titular fornece dados
+              pessoais para as finalidades descritas abaixo. Os campos obrigatórios
+              são identificados no formulário.
+            </p>
+            {policy.forms.map((form) => (
+              <div>
+                <h3>{form.name}</h3>
+                <ul>
+                  <li><strong>Dados coletados:</strong> {form.data}</li>
+                  <li><strong>Finalidade:</strong> {form.purpose}</li>
+                  <li><strong>Base legal:</strong> {form.legalBasis}</li>
+                  <li><strong>Destinatários:</strong> {form.recipients}</li>
+                  <li><strong>Retenção:</strong> {form.retention}</li>
+                </ul>
+              </div>
+            ))}
+            <p>
+              As solicitações relativas aos dados enviados podem ser feitas pelo{" "}
+              <a href="#direitos">canal de atendimento ao titular</a>.
+            </p>
+          </section>
+        )}
+
+        <section aria-labelledby="alteracoes">
+          <h2 id="alteracoes">
+            {hasForms ? 11 : 10}. Atualizações e disposições gerais
+          </h2>
+          <p>
+            Esta Política poderá ser revista em razão de alterações nas
+            atividades do site, nos serviços utilizados ou nas normas
+            aplicáveis. A versão vigente será disponibilizada nesta página, com
+            a indicação da data da última atualização.
+          </p>
+          <p>
+            Alterações relevantes serão informadas de forma adequada. Quando uma
+            nova finalidade depender de consentimento, será solicitada nova
+            manifestação antes do tratamento correspondente. A atualização desta
+            Política, por si só, não constitui autorização para ampliar
+            finalidades que dependam de consentimento.
+          </p>
+          <p>
+            Esta Política é interpretada conforme a legislação brasileira. Para
+            consultar o texto da LGPD e informações sobre o exercício de
+            direitos, acesse a
+            <a href="https://www2.camara.leg.br/legin/fed/lei/2018/lei-13709-14-agosto-2018-787077-normaatualizada-pl.html">
+              Lei nº 13.709/2018
+            </a>
+            e as
+            <a href="https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares">
+              orientações da ANPD
+            </a>
+            .
+          </p>
+        </section>
+      </div>
+    </article>
+  </Container>
+</Layout>
+
+<style>
+  @reference "../styles/global.css";
+
+  .policy-content {
+    @apply space-y-10 text-body;
+  }
+
+  .policy-content h2 {
+    @apply mb-4 font-semibold text-ink text-2xl md:text-3xl leading-tight tracking-normal scroll-mt-8;
+  }
+
+  .policy-content h3 {
+    @apply mt-6 font-semibold text-ink text-xl leading-tight;
+  }
+
+  .policy-content p + p {
+    @apply mt-4;
+  }
+
+  .policy-content ul {
+    @apply space-y-3 my-4 pl-6 list-disc;
+  }
+
+  .policy-content strong {
+    @apply font-semibold text-ink;
+  }
+
+  .policy-content a {
+    @apply text-ink decoration-line-hover hover:decoration-ink underline;
+  }
+</style>

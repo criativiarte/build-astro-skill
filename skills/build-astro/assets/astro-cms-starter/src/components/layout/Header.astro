@@ -1,0 +1,42 @@
+---
+import HeaderLink from "@/components/layout/HeaderLink.astro";
+import Container from "@/components/layout/Container.astro";
+import { SITE_TITLE } from "@/consts";
+
+type Link = {
+  name: string;
+  href: string;
+};
+
+const links: Link[] = [
+  {
+    name: "Início",
+    href: "/",
+  },
+  {
+    name: "Posts",
+    href: "/posts/",
+  },
+];
+---
+
+<header class="bg-surface border-line border-b">
+  <Container>
+    <nav class="flex justify-between items-center gap-4 py-4 text-lg">
+      <a
+        href="/"
+        class="inline-flex min-h-11 items-center font-semibold tracking-tight"
+        data-astro-prefetch="hover"
+      >
+        {SITE_TITLE}
+      </a>
+      <div class="flex items-center gap-4">
+        {
+          links.map((link) => (
+            <HeaderLink href={link.href}>{link.name}</HeaderLink>
+          ))
+        }
+      </div>
+    </nav>
+  </Container>
+</header>

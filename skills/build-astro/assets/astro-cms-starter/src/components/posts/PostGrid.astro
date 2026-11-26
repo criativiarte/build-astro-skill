@@ -1,0 +1,30 @@
+---
+import type { Post } from "@/utils/posts";
+import PostItem from "@/components/posts/PostItem.astro";
+
+interface Props {
+  posts: Post[];
+  emptyMessage?: string;
+  activeTag?: string;
+}
+
+const {
+  posts,
+  emptyMessage = "Nenhum post encontrado para este filtro.",
+  activeTag,
+} = Astro.props;
+---
+
+{
+  posts.length > 0 ? (
+    <section class="grid grid-cols-1 gap-5 md:grid-cols-2">
+      {posts.map((post) => (
+        <PostItem post={post} activeTag={activeTag} />
+      ))}
+    </section>
+  ) : (
+    <p class="rounded-lg border border-line bg-surface p-5 text-body">
+      {emptyMessage}
+    </p>
+  )
+}

@@ -1,0 +1,45 @@
+---
+import { render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import PostContent from "@/components/posts/PostContent.astro";
+import placeholder from "@/assets/images/post-placeholder.png";
+import { getPostData, getPublishedPosts, type Post } from "@/utils/posts";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+
+  return posts.map((post) => ({
+    params: { slug: getPostData(post).slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: Post };
+const postData = getPostData(post);
+const { Content } = await render(post);
+---
+
+<Layout
+  title={postData.title}
+  description={postData.description}
+  image={postData.coverImage ?? placeholder}
+  imageAlt={postData.title}
+  canonicalURL={`/posts/${postData.slug}/`}
+  article={{
+    publishedTime: postData.pubDate,
+    modifiedTime: postData.updatedDate,
+    author: postData.author,
+    tags: postData.tags,
+  }}
+>
+  <PostContent
+    title={postData.title}
+    pubDate={postData.pubDate}
+    updatedDate={postData.updatedDate}
+    author={postData.author}
+    tags={postData.tags}
+    coverImage={postData.coverImage}
+  >
+    <Content />
+  </PostContent>
+</Layout>

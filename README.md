@@ -13,7 +13,7 @@ Use $skill-installer para instalar esta skill:
 <URL da pasta skills/build-astro no GitHub>
 ```
 
-Para instalar manualmente, copie a pasta inteira, com `SKILL.md`, `agents/` e `references/`, para um destes destinos:
+Para instalar manualmente, copie a pasta inteira, com `SKILL.md`, `agents/`, `references/` e `assets/`, para um destes destinos:
 
 | Escopo | Destino |
 | --- | --- |
@@ -30,11 +30,12 @@ Figma: <link do frame com node-id>
 Destino: neste projeto
 ```
 
-Para um site novo, indique um template quando houver uma base específica ou use a estrutura mínima do Astro.
+Para um site novo, a skill usa a [base Astro CMS incluída no pacote](skills/build-astro/assets/astro-cms-starter), com geração estática, Sveltia CMS e SEO. O código, as configurações e o lockfile da base já vêm instalados com a skill. Posts e tags são exemplos que podem ser substituídos por coleções adequadas ao site, como projetos, serviços ou eventos.
 
 ## O que esperar
 
-- Para conteúdo editorial, a skill propõe coleções de acordo com o que a equipe precisa editar.
+- Sites criados com o template seguem a mesma organização de páginas, layouts, componentes, assets, estilos e coleções. As versões do lockfile, os contratos do CMS e os comandos de validação vêm da base. [Convenções do template](skills/build-astro/references/astro-cms-template.md)
+- Em um site novo, as coleções refletem o conteúdo que a equipe precisa editar no painel. Layout e elementos fixos continuam em Astro. Um site sem blog fica sem posts de exemplo e sem suas rotas.
 - Em projetos existentes, o design é adaptado à arquitetura atual, incluindo CMS, busca, rotas, componentes, versões e modo de renderização. Migrações entram no escopo quando solicitadas.
 - A entrega inclui as verificações realizadas e as limitações encontradas. Se o Figma estiver inacessível, você pode fornecer capturas de frames, tokens e assets para viabilizar a implementação.
 

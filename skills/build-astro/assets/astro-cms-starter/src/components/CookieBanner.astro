@@ -1,0 +1,338 @@
+---
+export interface Props {
+  policyUrl?: string | null;
+}
+
+const { policyUrl } = Astro.props;
+---
+
+<cookie-banner>
+  <section
+    class="cookie-banner__panel"
+    role="dialog"
+    aria-label="Preferências de cookies"
+    data-panel
+    hidden
+  >
+    <div class="cookie-banner__heading">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+        <path d="m9 12l2 2l4-4" />
+      </svg>
+      <h2>Sua privacidade importa</h2>
+    </div>
+    <p class="cookie-banner__description">
+      Você escolhe se permite cookies opcionais para análise de visitas e
+      publicidade. Recusar não impede o acesso ao conteúdo do site.
+    </p>
+    {policyUrl && (
+      <a class="cookie-banner__policy" href={policyUrl}>
+        Leia a política de privacidade
+      </a>
+    )}
+    <div class="cookie-banner__actions">
+      <button
+        type="button"
+        class="cookie-banner__button"
+        data-consent="rejected"
+      >
+        Recusar
+      </button>
+      <button
+        type="button"
+        class="cookie-banner__button cookie-banner__button--primary"
+        data-consent="accepted"
+      >
+        Aceitar
+      </button>
+    </div>
+  </section>
+
+  <button
+    type="button"
+    class="cookie-banner__settings"
+    aria-label="Preferências de cookies"
+    aria-haspopup="dialog"
+    data-settings
+    hidden
+  >
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+      <path d="m9 12l2 2l4-4" />
+    </svg>
+  </button>
+</cookie-banner>
+
+<script>
+  class CookieBanner extends HTMLElement {
+    connectedCallback() {
+      const panel = this.querySelector<HTMLElement>("[data-panel]")!;
+      const settings =
+        this.querySelector<HTMLButtonElement>("[data-settings]")!;
+      let consent: string | null = null;
+
+      try {
+        consent = localStorage.getItem("cookieConsent");
+      } catch {
+        // O aviso continua funcional quando o navegador bloqueia o armazenamento.
+      }
+
+      const setOpen = (open: boolean, moveFocus = false) => {
+        panel.hidden = !open;
+        settings.hidden = open;
+        if (moveFocus) {
+          (open ? panel.querySelector("button") : settings)?.focus({
+            preventScroll: true,
+          });
+        }
+      };
+
+      setOpen(consent !== "accepted" && consent !== "rejected");
+      settings.onclick = () => setOpen(true, true);
+      panel.onkeydown = (event) => {
+        if (event.key === "Escape") setOpen(false, true);
+      };
+      panel.onclick = (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>(
+          "button[data-consent]",
+        );
+        if (!button) return;
+
+        const consent = button.dataset.consent!;
+        try {
+          localStorage.setItem("cookieConsent", consent);
+        } catch {
+          // Sem armazenamento, a escolha vale apenas para a página atual.
+        }
+
+        this.dispatchEvent(
+          new CustomEvent("cookie-consent-change", {
+            detail: { consent },
+            bubbles: true,
+          }),
+        );
+        setOpen(false, true);
+      };
+    }
+  }
+
+  if (!customElements.get("cookie-banner")) {
+    customElements.define("cookie-banner", CookieBanner);
+  }
+</script>
+
+<style>
+  cookie-banner {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-ink, oklch(14.1% 0.005 285.823));
+  }
+
+  cookie-banner *,
+  cookie-banner *::before,
+  cookie-banner *::after {
+    box-sizing: border-box;
+  }
+
+  .cookie-banner__panel,
+  .cookie-banner__settings {
+    position: fixed;
+    left: calc(1.25rem + env(safe-area-inset-left, 0px));
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+  }
+
+  .cookie-banner__panel {
+    padding: 1.25rem;
+    border: 1px solid var(--color-line, oklch(92% 0.004 286.32));
+    border-radius: var(--radius-lg, 0.75rem);
+    background: var(--color-surface, #fff);
+    box-shadow: var(--shadow-panel, 0 4px 16px rgb(0 0 0 / 4%));
+    width: min(
+      24rem,
+      calc(
+        100vw - 2.5rem - env(safe-area-inset-left, 0px) -
+          env(safe-area-inset-right, 0px)
+      )
+    );
+    max-height: calc(
+      100dvh - 2.5rem - env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px)
+    );
+    overflow-y: auto;
+  }
+
+  .cookie-banner__settings,
+  .cookie-banner__button {
+    border: 1px solid var(--color-line, oklch(92% 0.004 286.32));
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--color-surface, #fff);
+    color: var(--color-ink, oklch(14.1% 0.005 285.823));
+    font: inherit;
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .cookie-banner__settings {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 0.75rem;
+    box-shadow: var(--shadow-tooltip, 0 4px 24px rgb(0 0 0 / 4%));
+  }
+
+  .cookie-banner__settings:hover,
+  .cookie-banner__button:hover {
+    background: var(--color-subtle, oklch(96.7% 0.001 286.375));
+    border-color: var(--color-line-hover, oklch(87.1% 0.006 286.286));
+  }
+
+  .cookie-banner__settings::after {
+    content: attr(aria-label);
+    position: absolute;
+    left: calc(100% + 0.75rem);
+    top: 50%;
+    width: max-content;
+    max-width: calc(
+      100vw - 7rem - env(safe-area-inset-left, 0px) -
+        env(safe-area-inset-right, 0px)
+    );
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-lg, 0.75rem);
+    background: var(--color-surface, #fff);
+    color: var(--color-body, oklch(44.2% 0.017 285.786));
+    box-shadow: var(--shadow-tooltip, 0 4px 24px rgb(0 0 0 / 4%));
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition:
+      opacity 200ms ease,
+      visibility 200ms ease;
+  }
+
+  .cookie-banner__settings:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (hover: hover) {
+    .cookie-banner__settings:hover::after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .cookie-banner__heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .cookie-banner__heading svg {
+    flex-shrink: 0;
+  }
+
+  .cookie-banner__heading h2 {
+    margin: 0;
+    font: inherit;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .cookie-banner__description {
+    margin: 0;
+    color: var(--color-body, oklch(44.2% 0.017 285.786));
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  .cookie-banner__policy {
+    display: inline-block;
+    margin-top: 0.75rem;
+    color: var(--color-body, oklch(44.2% 0.017 285.786));
+    font-size: 0.875rem;
+    text-decoration: underline;
+    text-decoration-color: var(--color-line-hover, oklch(87.1% 0.006 286.286));
+    text-underline-offset: 4px;
+  }
+
+  .cookie-banner__policy:hover {
+    color: var(--color-ink, oklch(14.1% 0.005 285.823));
+  }
+
+  .cookie-banner__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .cookie-banner__button {
+    min-height: 44px;
+    line-height: 1.5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .cookie-banner__button--primary {
+    border-color: var(--color-ink, oklch(14.1% 0.005 285.823));
+    background: var(--color-ink, oklch(14.1% 0.005 285.823));
+    color: var(--color-inverse, #fff);
+  }
+
+  .cookie-banner__button--primary:hover {
+    border-color: var(--color-ink, oklch(14.1% 0.005 285.823));
+    background: var(--color-action-hover, oklch(27.4% 0.006 286.033));
+  }
+
+  [hidden] {
+    display: none;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--color-ink, oklch(14.1% 0.005 285.823));
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cookie-banner__button,
+    .cookie-banner__settings,
+    .cookie-banner__settings::after {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import FormattedDate from "@/components/posts/FormattedDate.astro";
+import placeholder from "@/assets/images/post-placeholder.png";
+import { Image } from "astro:assets";
+import { getPostData, type Post } from "@/utils/posts";
+import Tags from "@/components/posts/Tags.astro";
+
+interface Props {
+  post: Post;
+  activeTag?: string;
+}
+
+const { post, activeTag } = Astro.props;
+
+const { title, slug, pubDate, coverImage, tags } = getPostData(post);
+---
+
+<article class="bg-surface border border-line rounded-lg overflow-hidden">
+  <div class="relative border-line border-b overflow-hidden">
+    <a href={`/posts/${slug}/`} data-astro-prefetch="hover" class="block focus-visible:-outline-offset-3">
+      <Image
+        width={670}
+        widths={[320, 480, 670]}
+        sizes="(min-width: 1138px) 502px, (min-width: 768px) calc((90vw - 20px) / 2), 90vw"
+        src={coverImage ?? placeholder}
+        alt={title}
+        decoding="async"
+        loading="lazy"
+        format="webp"
+        class="w-full h-full object-center object-cover aspect-video"
+      />
+    </a>
+    <Tags
+        tags={tags}
+        class="top-0 right-0 z-10 absolute justify-end m-4"
+        activeTag={activeTag}
+      />
+  </div>
+
+  <div class="space-y-1 p-5">
+    <a href={`/posts/${slug}/`} data-astro-prefetch="hover" class="block">
+      <h2 class="hover:text-body heading-3">{title}</h2>
+    </a>
+    {
+      pubDate && (
+        <p class="text-muted text-sm">
+          <FormattedDate date={pubDate} />
+        </p>
+      )
+    }
+  </div>
+</article>

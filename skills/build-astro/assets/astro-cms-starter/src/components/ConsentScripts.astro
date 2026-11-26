@@ -1,0 +1,75 @@
+---
+export interface Props {
+  enabled?: boolean;
+  requireConsent?: boolean;
+}
+
+const { enabled = true, requireConsent = true } = Astro.props;
+---
+
+{enabled && (requireConsent ? <template data-consent-scripts><slot /></template> : <slot />)}
+
+<script>
+  const scripts = Array.from(
+    document.querySelectorAll<HTMLTemplateElement>("template[data-consent-scripts]"),
+  ).flatMap((template) =>
+    Array.from(template.content.querySelectorAll("script"), (source) => ({ source, template })),
+  );
+
+  let allowed = false;
+  let started = false;
+
+  const loadScripts = async () => {
+    if (started || scripts.length === 0) return;
+    started = true;
+
+    for (const { source, template } of scripts) {
+      if (!allowed) return;
+      if (source.noModule && "noModule" in HTMLScriptElement.prototype) continue;
+
+      // Recria as tags para executá-las, mantendo a ordem do bloco.
+      const script = document.createElement("script");
+      script.async = false;
+      for (const { name, value } of source.attributes) {
+        script.setAttribute(name, value);
+      }
+      script.textContent = source.textContent;
+
+      const ready = script.src
+        ? new Promise<void>((resolve) => {
+            script.onload = () => resolve();
+            script.onerror = () => resolve();
+          })
+        : Promise.resolve();
+
+      template.before(script);
+      await ready;
+    }
+  };
+
+  const updateConsent = (consent: string | null) => {
+    allowed = consent === "accepted";
+    if (allowed) {
+      void loadScripts();
+    } else if (started) {
+      // Remover uma tag não interrompe um rastreador já executado.
+      window.location.reload();
+    }
+  };
+
+  document.addEventListener("cookie-consent-change", (event) => {
+    updateConsent((event as CustomEvent<{ consent: string }>).detail.consent);
+  });
+
+  window.addEventListener("storage", (event) => {
+    if (event.storageArea === localStorage && (event.key === "cookieConsent" || event.key === null)) {
+      updateConsent(event.newValue);
+    }
+  });
+
+  try {
+    updateConsent(localStorage.getItem("cookieConsent"));
+  } catch {
+    // Sem uma preferência salva, os scripts continuam bloqueados.
+  }
+</script>

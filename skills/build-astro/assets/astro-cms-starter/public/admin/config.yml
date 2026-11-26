@@ -1,0 +1,325 @@
+backend:
+  name: github
+  auth_methods: [token]
+  # Troque pelo owner/repositório real, exemplo:
+  repo: "usuario-ou-org/nome-do-repositorio"
+  # Troque pela branch usada para publicar o site, exemplo:
+  branch: "main"
+  commit_messages:
+    create: "chore(cms): cria {{path}}"
+    update: "chore(cms): atualiza {{path}}"
+    delete: "chore(cms): remove {{path}}"
+    uploadMedia: "chore(cms): adiciona mídia {{path}}"
+    deleteMedia: "chore(cms): remove mídia {{path}}"
+
+# Troque pela URL pública do site antes do deploy:
+site_url: "https://seu-dominio.com"
+
+# Título do CMS no login e na aba do navegador após o carregamento. Troque pelo título do site antes do deploy:
+app_title: "Painel | Título do Site"
+
+logo:
+  src: /favicon.png
+  show_in_header: true
+
+media_folder: /src/assets/images/posts
+public_folder: /src/assets/images/posts
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+singletons:
+  - name: whatsapp
+    label: WhatsApp
+    icon: chat
+    file: src/content/whatsapp.json
+    editor:
+      preview: false
+    fields:
+      - name: enabled
+        label: Exibir botão
+        widget: boolean
+        default: true
+
+      - name: phone
+        label: Telefone
+        widget: string
+        required: true
+        pattern: ['^[1-9][0-9]{7,14}$', "Informe de 8 a 15 dígitos, com DDI e DDD, sem espaços ou símbolos."]
+        hint: "Use apenas dígitos e substitua pelo telefone real de atendimento (DDI 55 + DDD 11 + numero). ex: 5511912345678"
+
+      - name: message
+        label: Mensagem inicial
+        widget: text
+        required: false
+        hint: "Mensagem preenchida ao abrir a conversa."
+
+      - name: tooltip
+        label: Texto do tooltip
+        widget: string
+        required: false
+        hint: "Deixe vazio para ocultar"
+
+      - name: showOnLoad
+        label: Exibir tooltip ao carregar
+        widget: boolean
+        default: true
+        hint: "Desative para mostrar o tooltip apenas no hover ou foco."
+
+  - name: privacyPolicy
+    label: Política de Privacidade
+    icon: policy
+    file: src/content/privacy-policy.json
+    editor:
+      preview: false
+    fields:
+      - { name: controllerName, label: Nome ou razão social, widget: string }
+      - name: controllerRegistration
+        label: CNPJ
+        widget: string
+        required: false
+        hint: "Deixe vazio se não se aplicar."
+      - name: controllerAddress
+        label: Endereço para contato
+        widget: string
+        required: false
+        hint: "Deixe vazio para ocultar."
+      - { name: contactEmail, label: E-mail de privacidade, widget: string }
+      - name: lastUpdated
+        label: Última atualização
+        widget: datetime
+        type: date
+        format: "YYYY-MM-DD"
+
+      - name: forms
+        label: Formulários
+        label_singular: Formulário
+        widget: list
+        required: false
+        summary: "{{name}}"
+        hint: "Cadastre um item por tipo de tratamento. Formulários que seguem as mesmas regras podem compartilhar um item. Se o site não tiver formulário, deixe a lista vazia."
+        fields:
+          - { name: name, label: Nome, widget: string, hint: "Exemplos de nome incluem Contato e Newsletter." }
+          - { name: data, label: Dados coletados, widget: text }
+          - { name: purpose, label: Finalidade, widget: text }
+          - { name: legalBasis, label: Base legal, widget: text }
+          - { name: recipients, label: Destinatários e finalidade do compartilhamento, widget: text }
+          - { name: retention, label: Prazo ou critério de retenção, widget: text }
+
+      - name: trackingServices
+        label: Serviços de rastreamento
+        label_singular: Serviço
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{name}} · {{enabled | ternary('Ativo', 'Inativo')}}"
+        hint: "Marque apenas os serviços que o site usa. Os serviços marcados aparecem na política. A instalação dos scripts é feita separadamente."
+        fields:
+          - { name: name, label: Nome, widget: string }
+          - { name: enabled, label: "O site usa este serviço?", widget: boolean, default: false }
+          - { name: purpose, label: Finalidade, widget: text }
+          - name: privacyUrl
+            label: URL da política do fornecedor
+            widget: string
+            pattern: ['^https?://[^\s]+$', "Informe uma URL com http:// ou https://."]
+
+collections:
+  - name: posts
+    label: Posts
+    label_singular: Post
+    icon: article
+    folder: src/content/posts
+    create: true
+    delete: true
+    slug:
+      template: "{{slug}}"
+      editable: [create]
+    extension: md
+    format: frontmatter
+    summary: "{{title}}"
+    preview_path: "posts/{{slug}}/"
+    # Relações múltiplas (tags) não são compatíveis com a edição em lote.
+    bulk_edit:
+      fields: [title, status, author]
+    # A tabela é o padrão em telas grandes; o CMS lembra a escolha do usuário.
+    table_columns:
+      - title
+      - status
+      - field: "{{pubDate | date('DD/MM/YY HH:mm')}}"
+        label: Publicação
+      - field: "{{updatedDate | date('DD/MM/YY HH:mm')}}"
+        label: Atualização
+      - author
+      - tags
+    sortable_fields:
+      fields: [pubDate, title, status, updatedDate, author]
+      default:
+        field: pubDate
+        direction: descending
+    view_filters:
+      - label: Publicados
+        field: status
+        pattern: Publicado
+      - label: Rascunhos
+        field: status
+        pattern: Rascunho
+    fields:
+      - label: Título
+        name: title
+        widget: string
+        required: true
+        maxlength: 100
+        pattern: ['.*\S.*', "Informe um título para o post."]
+        hint: "Título do post, com até 100 caracteres."
+
+      - label: Descrição
+        name: description
+        widget: text
+        required: true
+        maxlength: 160
+        pattern: ['[\s\S]*\S[\s\S]*', "Informe uma descrição para o post."]
+        hint: "Resumo para as listagens e a descrição de SEO, com até 160 caracteres."
+
+      - label: Imagem de Capa
+        name: coverImage
+        widget: image
+        required: false
+        choose_url: false
+        hint: "Envie ou selecione uma imagem do repositório para processamento pelo Astro."
+
+      - label: Autor
+        name: author
+        widget: relation
+        dropdown_threshold: 0
+        required: false
+        collection: authors
+        value_field: name
+        display_fields: [name]
+        search_fields: [name]
+
+      - label: Tags
+        name: tags
+        widget: relation
+        dropdown_threshold: 0
+        required: false
+        collection: tags
+        multiple: true
+        value_field: name
+        display_fields: [name]
+        search_fields: [name]
+
+      - label: Status
+        name: status
+        widget: select
+        dropdown_threshold: 0
+        default: Publicado
+        options:
+          - Publicado
+          - Rascunho
+
+      - label: Data de Publicação
+        name: pubDate
+        widget: datetime
+        required: true
+        default: "{{now}}"
+        date_format: "YYYY-MM-DD"
+        time_format: "HH:mm"
+        format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+
+      - label: Data de Atualização
+        name: updatedDate
+        widget: datetime
+        required: false
+        date_format: "YYYY-MM-DD"
+        time_format: "HH:mm"
+        format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+
+      - label: Corpo do texto
+        name: body
+        widget: markdown
+        required: true
+
+  - name: tags
+    label: Tags
+    label_singular: Tag
+    icon: sell
+    file: src/content/tags.json
+    bulk_edit: true
+    identifier_field: name
+    create: true
+    delete: true
+    summary: "{{name}}"
+    editor:
+      preview: false
+    fields:
+      - name: name
+        label: Nome
+        widget: string
+        pattern: ['.*\S.*', "Informe um nome."]
+
+  - name: authors
+    label: Autores
+    label_singular: Autor
+    icon: person
+    file: src/content/authors.json
+    bulk_edit: true
+    identifier_field: name
+    create: true
+    delete: true
+    summary: "{{name}}"
+    editor:
+      preview: false
+    fields:
+      - name: name
+        label: Nome
+        widget: string
+        pattern: ['.*\S.*', "Informe um nome."]
+
+  - divider: true
+
+  - name: scripts
+    label: Scripts
+    label_singular: Script
+    icon: code
+    file: src/content/scripts.json
+    identifier_field: name
+    create: true
+    delete: true
+    bulk_edit:
+      fields: [name, enabled, position]
+    summary: "{{name}}"
+    table_columns: [name, enabled, position]
+    editor:
+      preview: false
+    fields:
+      - name: name
+        label: Nome
+        widget: string
+        hint: "Ex.: Google Analytics ou Meta Pixel."
+
+      - name: enabled
+        label: Ativo
+        widget: boolean
+        default: false
+        hint: "Enquanto a política de privacidade estiver incompleta, scripts ativos carregam sem aguardar o aceite de cookies."
+
+      - name: position
+        label: Posição
+        widget: select
+        dropdown_threshold: 0
+        default: head
+        options:
+          - { label: Head, value: head }
+          - { label: Início do body, value: body }
+
+      - name: code
+        label: Código
+        widget: code
+        required: true
+        pattern: ['^\s*<[\s\S]+>\s*$', "Cole o snippet completo com tags <script>, não apenas JavaScript ou texto solto."]
+        default_language: html
+        allow_language_selection: false
+        output_code_only: true
+        hint: "Cole o snippet completo, incluindo as tags `<script>`. Não precisa de `is:inline`. Remova trechos `<noscript>`, imagens e outros elementos HTML."
