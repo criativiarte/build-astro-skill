@@ -1,103 +1,29 @@
-# Convencoes Astro
+# Convenções Astro
 
-## Versao e recursos nativos
+## Escolher uma stack compatível
 
-- Preservar a versao do Astro e as integracoes oficiais de um template ou projeto existente, salvo pedido explicito de migracao.
-- Respeitar uma versao definida pelo desenvolvedor.
-- Quando nao houver template nem versao definida, verificar a documentacao oficial e o registro do pacote no momento da tarefa e usar a versao estavel mais recente do Astro. Nao fixar na skill um numero que ficara obsoleto.
-- Ler a documentacao correspondente a major escolhida antes de configurar o projeto.
-- Preferir recursos nativos estaveis dessa versao a bibliotecas externas ou implementacoes manuais equivalentes. Avaliar pelo menos assets, fontes, conteudo, componentes SVG, roteamento, prefetch, i18n, variaveis de ambiente e recursos de build quando forem pertinentes ao escopo.
-- Nao habilitar recursos experimentais apenas para maximizar o uso de APIs nativas. Usar experimentais somente com justificativa e concordancia do desenvolvedor.
-- Nao introduzir funcionalidades de backend apenas porque a versao escolhida as oferece.
+1. Em um projeto existente, parta de `package.json`, lockfile, configuração do Astro, versão de Node usada no CI/hospedagem e gerenciador definido pelo projeto. Preserve versões, adapters, sistema de CSS e modo de renderização. Trate uma migração solicitada como mudança própria e consulte os guias de cada major envolvida.
+2. Em projeto novo criado a partir de um template, preserve o manifesto e as versões do lockfile da base. Se a criação sem template tiver sido solicitada e nenhuma versão for especificada, consulte o registro e as [versões oficiais do Astro](https://docs.astro.build/en/upgrade-astro/). Escolha a versão estável mais recente compatível com Node, hospedagem e `peerDependencies` do checker e das integrações. Se uma versão obrigatória for incompatível, apresente o conflito ao desenvolvedor.
+3. Deixe o Astro resolver sua versão de Vite. Adicione Vite diretamente apenas se uma integração ou ferramenta usada pelo projeto exigir isso. Evite duplicar o bundler ou aplicar overrides para esconder incompatibilidades.
+4. Escolha a versão estável de TypeScript que o checker e as integrações suportarem. Em projetos novos, use `astro/tsconfigs/strict` e execute `astro check` (com `@astrojs/check` e TypeScript em `devDependencies`). Em templates, use os comandos de tipagem existentes e seus checkers de Vue ou Svelte quando pertinentes. `astro dev` e `astro build` transpilam os tipos, enquanto `astro check` verifica também arquivos `.astro`. Valide o comando real e mantenha o diagnóstico habilitado.
 
-## Estrutura preferida
+### Referência verificada em novembro de 2026
 
-Adaptar-se primeiro a estrutura existente. Para codigo novo sem convencao previa, usar:
+- Astro 7.4.13 declara Node `>=22.23.4` e depende de Vite `^8.3.8`. Confirme os requisitos da versão efetivamente instalada, inclusive em releases de patch. Astro 7 usa Vite 8/Rolldown e compilador Rust. Em migração, confira markup inválido, espaçamento inline e compatibilidade de integrações e pipelines Markdown com Sätteri ou o processor remark/rehype já usado. [Manifesto do Astro](https://registry.npmjs.org/astro/7.4.13) · [Migração para Astro 7](https://docs.astro.build/en/guides/upgrade-to/v7/) · [Migração do Vite](https://vite.dev/guide/migration)
+- TypeScript 7 está estável. O `astro check` ainda precisa da API de linguagem disponível no TS 6 e `@astrojs/check` 0.9.12 declara suporte ao TS 5/6. Para projetos atuais que usam esse checker, adote TS 6.x compatível e reavalie a combinação conforme evoluir o suporte. [TypeScript 7](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) · [Acompanhamento do Astro](https://github.com/withastro/roadmap/discussions/1321) · [Verificação de tipos](https://docs.astro.build/en/guides/typescript/)
 
-```text
-src/
-  assets/
-    images/
-    icons/
-  components/
-    ui/
-    layout/
-    sections/
-  content/
-  layouts/
-  pages/
-  styles/
-```
+## Usar APIs nativas conforme o escopo
 
-Colocar secoes completas em `src/components/sections`. Colocar primitives reutilizaveis em `ui` e componentes estruturais em `layout`.
+- Use componentes `.astro` com props tipadas e slots. Prefira HTML/CSS para navegação e interação básica. Para comportamento adicional, escolha um script Astro pequeno ou hidrate somente a ilha necessária com a diretiva `client:*` adequada. Valide os comportamentos existentes e a navegação com teclado.
+- Em projetos novos, use Tailwind CSS v4 pela integração com Vite (`@tailwindcss/vite`) quando compatível. Defina tokens em `@theme`. Use `@theme inline` para aliases que referenciem variáveis como as famílias tipográficas. Preserve tokens e CSS existentes em adaptações. [Estilos no Astro](https://docs.astro.build/en/guides/styling/) · [Variáveis de tema](https://tailwindcss.com/docs/theme)
+- Use `Image` ou `Picture` de `astro:assets` para imagens compatíveis. Reserve dimensões, escreva `alt` adequado à função e gere tamanhos que correspondam à largura no layout. Carregue a imagem principal cedo quando ela for crítica e adie imagens fora da primeira tela. Confirme se o layout responsivo é definido pela API do Astro ou pelo CSS para evitar conflito de cascata. Use nomes descritivos em kebab-case e reserve `public/` para assets que precisam ser servidos sem transformação. [Imagens](https://docs.astro.build/en/guides/images/)
+- Autohospede fontes licenciadas. Use a Fonts API estável da versão escolhida, com fonte local ou provider processado pelo Astro e `Font` no head compartilhado. Carregue apenas pesos e subconjuntos usados. Reserve preload para fontes críticas. Em versões sem API estável, preserve a solução local existente ou use `@font-face` com WOFF2 licenciado. Se a fonte original estiver indisponível, use uma alternativa permitida e registre a diferença. [Fontes](https://docs.astro.build/en/guides/fonts/)
+- Para conteúdo local repetível, use as Content Collections com schema. Em versões atuais, use `src/content.config.ts`, loaders `glob()` ou `file()` de `astro/loaders`, `astro/zod` e leitura tipada de `astro:content`. Preserve CMS, schemas e URLs existentes. [Content Collections](https://docs.astro.build/en/guides/content-collections/)
+- Use `astro-icon` e identificadores Iconify nos projetos novos compatíveis, com apenas as coleções necessárias. Preserve o sistema de ícones existente quando estiver integrado aos componentes. Dê nomes acessíveis a ações sem texto visível.
+- Use SSG nas páginas novas quando o escopo permitir. Preserve SSG, SSR e prerender do projeto existente. Use roteamento, metadados e demais APIs estáveis da versão quando resolverem uma necessidade real. Adote recursos experimentais, adapters, APIs de backend, cache de servidor ou View Transitions apenas quando fizerem parte do pedido.
 
-## Componentes
+## Dependências e execução
 
-- Nomear arquivos de componentes em PascalCase.
-- Tipar todas as props.
-- Usar slots quando o componente definir estrutura e o consumidor definir conteudo.
-- Extrair componentes diante de repeticao real, consistencia compartilhada ou responsabilidade clara.
-- Evitar componentes que apenas ocultem uma unica `div` sem semantica ou politica reutilizavel.
-- Manter componentes de conteudo independentes de largura maxima.
-- Criar ou reutilizar `src/components/layout/Container.astro` para o wrapper estrutural e os gutters. Fazer o componente encaminhar `class`, atributos HTML e o slot, sem impor uma largura de conteudo fixa.
-- Declarar a largura em cada uso de `Container`. Na ausencia de valor fornecido pelo desenvolvedor, usar `class="mx-auto w-17/20 max-w-7xl"`.
-
-## Imagens e assets
-
-- Usar `Image` ou `Picture` de `astro:assets` para imagens locais quando aplicavel.
-- Informar dimensoes e `alt` apropriado para evitar layout shift e preservar acessibilidade.
-- Manter em `public` somente arquivos que nao devam passar pelo pipeline do Astro.
-- Nomear assets em kebab-case por funcao e contexto, como `home-hero-team.webp`.
-- Evitar `image-1`, `final`, `new` e nomes baseados somente na ordem de exportacao.
-
-## Fontes
-
-- Usar a Fonts API nativa do Astro disponivel na versao escolhida.
-- Configurar familias e providers em `astro.config.*` e renderizar o componente `Font` de `astro:assets` no head compartilhado, como `BaseHead`, quando essa for a API documentada para a versao.
-- Autohospedar as fontes: permitir que o Astro baixe e armazene os arquivos de um provider suportado ou usar arquivos locais. Nao carregar Google Fonts, Fontshare ou outro provider por `<link>` ou `@import` em runtime.
-- Definir uma variavel CSS por familia e conecta-la aos tokens de tipografia no `@theme` do Tailwind CSS v4.
-- Solicitar ou inferir a menor selecao necessaria de familias, pesos, estilos e subsets. Evitar baixar variantes sem uso.
-- Aplicar preload somente a fontes realmente criticas para o primeiro viewport. Evitar preloads indiscriminados.
-- Definir fallbacks coerentes e verificar layout shift, legibilidade e comportamento quando a fonte ainda nao estiver disponivel.
-- Preservar a estrategia de fontes de um template existente quando ela fizer parte de sua arquitetura, salvo pedido explicito; preferir migracao para a API nativa somente quando estiver no escopo.
-
-## Conteudo
-
-Usar Content Collections para conteudo local estruturado, com schema e validacao. Preservar CMS ou collections existentes quando houver template. Nao duplicar o mesmo conteudo em props, arquivos e markup.
-
-## Tailwind CSS v4
-
-- Definir foundations e tokens semanticos no `@theme`.
-- Reutilizar tokens antes de introduzir valores arbitrarios.
-- Evitar listas longas de classes condicionais; modelar variantes tipadas quando necessario.
-- Nao transformar valores de layout locais em tokens globais sem reutilizacao prevista.
-
-## Icones
-
-Usar `astro-icon` com nomes no padrao Iconify. Importar somente o necessario. Manter uma familia visual coerente e fornecer rotulo acessivel quando o icone representar uma acao sem texto visivel.
-
-## Dependencias
-
-- Inspecionar `package.json`, lockfile, scripts, configuracao de deploy e comandos de CI antes de classificar pacotes.
-- Colocar em `devDependencies` ferramentas necessarias somente para desenvolvimento e verificacao, como lint, formatacao, testes, typecheck e utilitarios locais.
-- Colocar em `dependencies` bibliotecas importadas pela aplicacao e pacotes exigidos durante o build, deploy ou runtime de producao, conforme o contrato real da infraestrutura.
-- Nao classificar um pacote apenas por ele aparecer ou nao no bundle do navegador. Considerar quando e onde ele precisa estar instalado.
-- Preservar a classificacao do template quando ela refletir uma pipeline valida. Corrigir pacotes mal classificados somente depois de verificar scripts, imports e processo de deploy.
-- Usar a opcao de dependencia de desenvolvimento do gerenciador escolhido, como `-D` ou `--save-dev`, para ferramentas locais.
-- Nao manter o mesmo pacote simultaneamente em `dependencies` e `devDependencies`.
-- Nao misturar gerenciadores de pacotes. Atualizar somente o lockfile correspondente ao projeto.
-- Depois de mover ou adicionar pacotes, reinstalar de forma coerente, executar build e verificacoes e confirmar que a pipeline de producao continua encontrando tudo que precisa.
-
-## Renderizacao e interatividade
-
-- Pensar a implementacao visual como static-first.
-- Preservar `output`, adapters e modo de renderizacao do projeto.
-- Nao proibir SSR e nao o introduzir sem pedido.
-- Nao tomar decisoes de backend na etapa inicial de layout.
-- Preferir HTML e CSS. Adicionar JavaScript somente para comportamento real.
-- Usar a menor ilha e a diretiva `client:*` mais restrita que atenda ao caso.
-- Nao usar View Transitions sem pedido explicito.
-
-## SEO e semantica
-
-Reutilizar `BaseHead` ou equivalente. Centralizar title, description, canonical, Open Graph e demais metadados. Usar landmarks, headings hierarquicos, links e botoes de acordo com sua semantica.
+- Mantenha lint, formatação, TypeScript, checagem de tipos e testes em `devDependencies`. Ferramentas usadas só no build também podem ficar ali quando CI/hospedagem as instalam na etapa de build. Declare dependências que precisam estar instaladas em produção em `dependencies`, incluindo módulos externos exigidos pelo runtime SSR. Verifique scripts, imports e o pipeline antes de mover pacotes.
+- Use um único gerenciador por projeto e mantenha seu lockfile. Resolva peers e engines antes de instalar. Teste novamente quando alterar o manifesto.
+- Para verificar as rotas, use os comandos do projeto e o preview do build. Quando útil e disponível, Astro 7.2+ oferece `astro preview start/status/stop`. Em ambientes com preview em primeiro plano, use uma sessão local separada e confirme o endereço real. Encerre somente o processo que iniciou. Use `astro build --timings` (7.4+) ao investigar gargalos de build. [CLI Astro](https://docs.astro.build/en/reference/cli-reference/) · [Astro com ferramentas de IA](https://docs.astro.build/en/guides/build-with-ai/)

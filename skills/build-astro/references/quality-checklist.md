@@ -1,57 +1,14 @@
 # Checklist de qualidade
 
-## Antes de editar
+## Verificar código e build
 
-- Confirmar escopo, rotas e frames do Figma.
-- Confirmar se existe template opcional.
-- Inventariar arquitetura, componentes e consumidores existentes.
-- Identificar tokens, assets e estados.
+- Use os comandos existentes de lint, formatação em modo de verificação, testes e checagem de tipos pertinentes. Antes de uma alteração ampla em projeto existente, execute as verificações relevantes para registrar falhas preexistentes, se for viável.
+- Execute checagem de tipos e build de produção separadamente quando o script de build não incluir ambas. Confirme que a infraestrutura tem acesso às dependências necessárias na etapa correta. Revise o diff, o lockfile e os avisos introduzidos.
+- Use o build no preview do projeto ou na forma suportada pelo adapter. Confira as URLs reais, incluindo `base`, e que as rotas e os assets afetados carregam corretamente. Em SSR, registre limitações do adapter ou dos dados locais quando impedirem a verificação. Valide ao menos o fluxo de interação principal afetado, com foco em preservar contratos existentes.
 
-## Implementacao
+## Verificar design e acessibilidade
 
-- Preservar contratos funcionais e configuracao de renderizacao.
-- Manter secoes em `src/components/sections`.
-- Criar ou reutilizar o componente externo `Container`.
-- Declarar a largura em cada uso do `Container`; usar `mx-auto w-17/20 max-w-7xl` quando o desenvolvedor nao especificar outro valor.
-- Manter largura e max-width fora dos componentes de conteudo.
-- Usar `Image` ou `Picture` quando aplicavel.
-- Usar a Fonts API do Astro e servir fontes pelo proprio site, sem requisicoes de fontes a terceiros em runtime.
-- Quando nao houver template nem versao especificada, confirmar o uso da versao estavel mais recente do Astro disponivel no momento da implementacao.
-- Confirmar que recursos nativos adequados da versao escolhida foram preferidos a dependencias externas equivalentes.
-- Revisar `dependencies` e `devDependencies`; manter ferramentas exclusivamente locais em `devDependencies` e pacotes exigidos pelo build, deploy ou runtime no grupo compativel com a infraestrutura.
-- Confirmar que nao ha pacote duplicado entre os dois grupos nem lockfiles de gerenciadores diferentes.
-- Usar `astro-icon` com padrao Iconify.
-- Definir tokens no `@theme` sem duplicacao desnecessaria.
-- Nao adicionar View Transitions.
-- Nao introduzir backend, SSR, adapter ou JavaScript sem necessidade solicitada.
-
-## Validacao visual
-
-- Comparar hierarquia, espacamento, tipografia, cores, bordas e proporcoes com o Figma.
-- Testar mobile, desktop e larguras intermediarias.
-- Testar conteudo longo, listas variaveis e assets ausentes.
-- Verificar estados interativos pertencentes ao escopo.
-
-## Acessibilidade e SEO
-
-- Verificar landmarks e hierarquia de headings.
-- Navegar somente por teclado e confirmar foco visivel.
-- Confirmar contraste, labels, nomes acessiveis e textos alternativos.
-- Confirmar fallbacks tipograficos, apenas pesos e subsets necessarios, e preload restrito a fontes criticas.
-- Respeitar `prefers-reduced-motion` quando houver animacao solicitada.
-- Confirmar title, description, canonical e metadados sociais quando aplicaveis.
-
-## Codigo e build
-
-- Executar formatacao, lint, typecheck e testes configurados no projeto.
-- Executar build de producao.
-- Confirmar que a estrategia de instalacao usada pela CI ou hospedagem disponibiliza todas as dependencias necessarias antes do build e no runtime.
-- Oferecer a auditoria Lighthouse opcional após as verificações. Quando executada, exportar e ler o relatório JSON local.
-- Corrigir warnings introduzidos pela mudanca.
-- Verificar rotas e links internos afetados.
-- Confirmar que nenhuma configuracao de backend ou renderizacao mudou por acidente.
-- Revisar o diff e remover duplicacao, codigo morto e assets sem uso introduzidos pela tarefa.
-
-## Entrega
-
-Informar componentes reutilizados e criados, tokens adicionados, principais decisoes responsivas, comandos executados, scores e rotas do Lighthouse quando auditados, caminho dos relatórios e pendencias que dependam do desenvolvedor ou do backend.
+- Compare a implementação renderizada com os frames no mesmo viewport. Confira a largura estreita e uma intermediária quando o layout variar entre breakpoints. Verifique overflow, textos longos, proporção e posição dos assets, listas e estados alterados. Limite a revisão às rotas solicitadas e aos consumidores dos componentes compartilhados que foram alterados.
+- Navegue por teclado nos fluxos afetados. Confira se o foco permanece visível e livre de sobreposição por elementos fixos. Verifique ordem de navegação, nomes acessíveis, contraste, hierarquia de títulos, landmarks, labels e texto alternativo. Confira movimento reduzido quando houver animação. Em formulários, exercite validação e mensagens de erro com os recursos já disponíveis no projeto. Verifique semântica e conteúdo antes de oferecer Lighthouse.
+- Confira os metadados da rota, links internos e canonical quando aplicáveis. Inspecione o carregamento de imagens e fontes e a quantidade de JavaScript no cliente nas rotas alteradas.
+- Corrija regressões introduzidas pela implementação e repita as verificações pertinentes. Registre separadamente resultados aprovados, falhas preexistentes e verificações não executadas, com o motivo. Siga o fluxo opcional de auditoria indicado em `SKILL.md` depois desta etapa.
