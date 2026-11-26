@@ -45,6 +45,7 @@ Para um site novo, a skill usa a [base Astro CMS incluída no pacote](skills/bui
 - Sites criados com o template seguem a mesma organização de páginas, layouts, componentes, assets, estilos e coleções. As versões do lockfile, os contratos do CMS e os comandos de validação vêm da base. [Convenções do template](skills/build-astro/references/astro-cms-template.md)
 - Em um site novo, as coleções refletem o conteúdo que a equipe precisa editar no painel. Layout e elementos fixos continuam em Astro. Um site sem blog fica sem posts de exemplo e sem suas rotas.
 - Em projetos existentes, o design é adaptado à arquitetura atual, incluindo CMS, busca, rotas, componentes, versões e modo de renderização. Migrações entram no escopo quando solicitadas.
+- Quando há frentes independentes, o Codex pode distribuir o trabalho entre subagentes. O agente principal define o que será compartilhado entre as páginas, integra as mudanças e verifica o resultado.
 - A entrega inclui as verificações realizadas e as limitações encontradas. Se o Figma estiver inacessível, você pode fornecer capturas de frames, tokens e assets para viabilizar a implementação.
 
 ### Auditoria Lighthouse
