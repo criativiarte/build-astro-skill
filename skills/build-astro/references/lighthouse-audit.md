@@ -1,86 +1,20 @@
-# Auditoria automatica com Lighthouse CI
+# Auditoria Lighthouse opcional
 
-## Objetivo
+## Oferecer depois da implementação
 
-Executar Lighthouse CI depois do build para detectar regressoes de performance, acessibilidade, boas praticas e SEO. Tratar o resultado como complemento, nao substituto, das verificacoes manuais de teclado, foco, semantica e conteudo.
+Conclua a implementação e as verificações de código, build, navegação e acessibilidade manual. Se o desenvolvedor ainda não tiver decidido, use o controle interativo de perguntas da sessão, com as opções **Executar auditoria** e **Encerrar sem auditoria**. Pergunte “Quer que eu rode o Lighthouse em uma janela privada do seu navegador e analise o relatório JSON?”
 
-## Preparar o projeto
+Se a sessão não oferecer um controle interativo, faça a pergunta no chat junto com a entrega. Prossiga somente com autorização afirmativa para esta auditoria. Respeite a decisão já informada pelo desenvolvedor, inclusive uma recusa. Se não houver resposta durante a entrega, encerre com a auditoria como não executada e retome quando houver aceite. Se já souber de um impedimento técnico, informe-o e indique como fornecer o JSON. Desligue previews iniciados para validação se não precisarem ficar disponíveis enquanto aguarda.
 
-1. Identificar o gerenciador de pacotes e os scripts existentes.
-2. Procurar `lighthouserc.*`, dependencia `@lhci/cli` e scripts de auditoria.
-3. Preservar a configuracao existente e seus limites. Nao reduzir um limite para fazer a auditoria passar.
-4. Quando nao houver integracao, adicionar `@lhci/cli` como dependencia de desenvolvimento usando o gerenciador do projeto.
-5. Criar `lighthouserc.cjs` ou o formato ja adotado pelo repositorio.
-6. Adicionar `.lighthouseci/` ao `.gitignore`, salvo decisao explicita de versionar relatorios.
+## Escolher o navegador e auditar via Computer Use
 
-## Usar limites padrao
+1. Carregue as instruções de Computer Use da sessão. Entre os navegadores instalados, dê prioridade ao que o desenvolvedor indicar ou que já se saiba ser o mais usado. Se essa preferência for desconhecida, use o navegador padrão do sistema como indicação de uso habitual. Confira se ele oferece janela privada, painel Lighthouse nos DevTools e exportação JSON. Se faltar suporte, escolha outro navegador compatível já instalado, priorizando um que esteja em uso quando houver mais de uma opção. Edge e Chrome são exemplos. Execute pelo painel nativo. A auditoria dispensa instalação de navegador ou extensões, dependências do projeto, automação headless e configuração de CI.
+2. Use o build de produção local. Em SSG, use o preview do projeto ou `astro preview`. Em SSR, use o servidor local suportado pelo adapter. Vincule-o a loopback quando aplicável e confira porta, `base` e status da rota. Use outra URL somente se o desenvolvedor a tiver autorizado. Prefira uma ou duas rotas alteradas e representativas que possam ser abertas sem autenticação.
+3. Abra uma janela privada no navegador escolhido e confira seu indicador. Use apenas a aba da auditoria. Se a sessão privada já estiver compartilhando estado com outras janelas, preserve essas janelas e registre a limitação. Navegue até a rota confirmada. Em **DevTools → Lighthouse**, escolha **Navigation**, perfil **Mobile** por padrão e as categorias Performance, Accessibility, Best Practices e SEO. Confira a rota carregada antes de iniciar.
+4. No menu do relatório, selecione **Save as JSON**. Salve em um caminho local ainda livre, com nome que identifique rota e perfil. Verifique que o arquivo existe. Se a interface exigir ação manual, use a transferência de controle quando disponível.
+5. Leia o JSON do disco. Confira `requestedUrl`, a URL final (`finalDisplayedUrl` ou `finalUrl`, conforme a versão), perfil, versão, horário, `runtimeError` e `runWarnings`. Use `categories` para pontuações e `audits` para métricas e achados. Confirme que o documento avaliado foi a rota esperada e que o relatório não corresponde a uma tela de erro ou autenticação.
+6. Informe navegador, rota, perfil, pontuações obtidas, limitações, achados priorizados e caminho do JSON. Trate a nota como medição local de laboratório e compare resultados em condições equivalentes, incluindo navegador e versão. Mantenha os relatórios locais e encerre somente os servidores iniciados para a auditoria.
 
-Quando o desenvolvedor ou o projeto nao definirem outros limites, usar:
+Se nenhum navegador instalado oferecer o fluxo completo ou se Computer Use, preview ou exportação estiver indisponível, informe a etapa bloqueada. Se a medição terminou e o JSON ficou indisponível, marque a leitura como pendente e preserve o relatório aberto para a exportação manual, quando possível. O desenvolvedor pode salvar o JSON pelo painel Lighthouse de um navegador compatível e anexá-lo para análise. A pontuação de acessibilidade cobre as verificações automáticas aplicáveis. Mantenha as verificações manuais.
 
-- performance: `0.90`;
-- accessibility: `1.00`;
-- best-practices: `0.95`;
-- seo: `0.95`.
-
-Usar tres execucoes por rota para reduzir variacao. Configurar falha de processo quando um limite nao for atingido.
-
-Exemplo base para um site estatico:
-
-```js
-module.exports = {
-  ci: {
-    collect: {
-      staticDistDir: "./dist",
-      numberOfRuns: 3,
-    },
-    assert: {
-      assertions: {
-        "categories:performance": ["error", { minScore: 0.9 }],
-        "categories:accessibility": ["error", { minScore: 1 }],
-        "categories:best-practices": ["error", { minScore: 0.95 }],
-        "categories:seo": ["error", { minScore: 0.95 }],
-      },
-    },
-    upload: {
-      target: "filesystem",
-      outputDir: "./.lighthouseci/reports",
-    },
-  },
-};
-```
-
-Adaptar a sintaxe a versao instalada do Lighthouse CI e validar a configuracao na documentacao oficial atual antes de usa-la.
-
-## Escolher as rotas
-
-Auditar uma amostra pequena que represente arquiteturas diferentes:
-
-- pagina inicial;
-- um listing ou categoria;
-- uma pagina de post ou detalhe;
-- busca, quando puder ser executada localmente;
-- qualquer pagina com estrutura ou interatividade substancialmente diferente.
-
-Evitar auditar milhares de paginas estaticas equivalentes. Se `staticDistDir` descobrir rotas demais, configurar um servidor local com `collect.startServerCommand` e listar URLs representativas em `collect.url`.
-
-## Executar
-
-1. Executar o build de producao.
-2. Executar `lhci autorun` pelo gerenciador do projeto.
-3. Corrigir falhas introduzidas pela implementacao.
-4. Repetir a auditoria depois das correcoes.
-5. Informar scores, rotas auditadas e caminho dos relatorios.
-
-Nao usar `temporary-public-storage`. Manter `upload.target` como `filesystem`, a menos que o desenvolvedor forneca uma infraestrutura privada de Lighthouse CI.
-
-## Tratar impedimentos
-
-Lighthouse CLI precisa de Chrome ou Chromium. Quando o navegador nao estiver disponivel:
-
-- procurar um executavel configurado pelo projeto;
-- nao instalar navegador ou alterar CI sem autorizacao;
-- registrar a auditoria como nao executada;
-- informar o comando que deve ser repetido em um ambiente compativel;
-- nao apresentar scores presumidos nem declarar sucesso.
-
-Se a instalacao de dependencias estiver bloqueada, preservar o projeto e informar o bloqueio. Falha de rede ou variacao de performance nao deve ocultar falhas deterministicas de acessibilidade, boas praticas ou SEO.
+Referências oficiais: [Lighthouse no Edge InPrivate](https://learn.microsoft.com/en-us/microsoft-edge/devtools/speed/get-started), [Lighthouse no Chrome DevTools](https://developer.chrome.com/docs/devtools/lighthouse/), [exportação JSON](https://developer.chrome.com/docs/lighthouse/overview/) e [pontuação de acessibilidade](https://developer.chrome.com/docs/lighthouse/accessibility/scoring/).

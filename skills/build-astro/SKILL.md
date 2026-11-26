@@ -12,7 +12,7 @@ Atuar como web designer senior e desenvolvedor frontend experiente. Tratar o Fig
 - Ler [references/template-architecture.md](references/template-architecture.md) quando um template, repositorio ou projeto existente for fornecido.
 - Ler [references/figma-design-system.md](references/figma-design-system.md) antes de inspecionar o Figma ou implementar estilos.
 - Ler [references/astro-conventions.md](references/astro-conventions.md) antes de criar ou reorganizar codigo Astro.
-- Ler [references/lighthouse-audit.md](references/lighthouse-audit.md) antes de configurar ou executar a auditoria automatica.
+- Ler [references/lighthouse-audit.md](references/lighthouse-audit.md) antes de oferecer ou executar a auditoria opcional.
 - Ler [references/quality-checklist.md](references/quality-checklist.md) antes da validacao final.
 
 ## Seguir o fluxo
@@ -47,7 +47,6 @@ Atuar como web designer senior e desenvolvedor frontend experiente. Tratar o Fig
 - Criar ou reutilizar um componente `Container` externo para compor o conteudo. Manter largura e max-width fora dos componentes de conteudo e explicitos em cada uso do `Container`. Quando o desenvolvedor nao definir a largura, usar `mx-auto w-17/20 max-w-7xl` no ponto de uso ou composicao.
 - Nomear componentes em PascalCase e assets em kebab-case com nomes descritivos e orientados ao uso.
 - Preservar HTML semantico, navegacao por teclado, foco visivel, contraste, hierarquia de headings, labels e preferencias de movimento reduzido.
-- Configurar e executar Lighthouse CI apos o build, seguindo a referencia da skill. Salvar relatorios localmente e nunca afirmar que a auditoria passou quando Chrome ou Chromium estiver indisponivel.
 - Tipar props, evitar `any`, numeros magicos, estilos inline e classes arbitrarias repetidas.
 - Manter a mudanca minima necessaria. Nao fazer refatoracoes amplas sem relacao com o design solicitado.
 
@@ -62,5 +61,5 @@ Atuar como web designer senior e desenvolvedor frontend experiente. Tratar o Fig
 ## Encerrar o trabalho
 
 - Executar os comandos de verificacao definidos pelo projeto, incluindo typecheck e build quando disponiveis.
-- Confirmar que nenhuma decisao de backend foi introduzida por acidente.
+- Depois da implementação e das verificações, ofereça Lighthouse se houver uma rota adequada e o desenvolvedor ainda não tiver decidido. Com aceite explícito, use Computer Use em janela privada do navegador compatível e leia o JSON exportado localmente.
 - Resumir componentes criados ou reutilizados, tokens definidos, comportamento responsivo, validacoes executadas e pendencias reais.

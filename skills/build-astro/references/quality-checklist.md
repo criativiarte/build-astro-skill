@@ -46,10 +46,7 @@
 - Executar formatacao, lint, typecheck e testes configurados no projeto.
 - Executar build de producao.
 - Confirmar que a estrategia de instalacao usada pela CI ou hospedagem disponibiliza todas as dependencias necessarias antes do build e no runtime.
-- Executar Lighthouse CI em tres rodadas por rota representativa depois do build.
-- Exigir, na ausencia de limites do projeto: performance `0.90`, accessibility `1.00`, best-practices `0.95` e seo `0.95`.
-- Salvar relatorios no filesystem, sem upload publico, e informar o caminho na entrega.
-- Se Chrome ou Chromium estiver indisponivel, registrar a auditoria como nao executada e nunca como aprovada.
+- Oferecer a auditoria Lighthouse opcional após as verificações. Quando executada, exportar e ler o relatório JSON local.
 - Corrigir warnings introduzidos pela mudanca.
 - Verificar rotas e links internos afetados.
 - Confirmar que nenhuma configuracao de backend ou renderizacao mudou por acidente.
@@ -57,4 +54,4 @@
 
 ## Entrega
 
-Informar componentes reutilizados e criados, tokens adicionados, principais decisoes responsivas, comandos executados, scores e rotas do Lighthouse, caminho dos relatorios e pendencias que dependam do desenvolvedor ou do backend.
+Informar componentes reutilizados e criados, tokens adicionados, principais decisoes responsivas, comandos executados, scores e rotas do Lighthouse quando auditados, caminho dos relatórios e pendencias que dependam do desenvolvedor ou do backend.

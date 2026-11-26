@@ -79,7 +79,7 @@ Usar `astro-icon` com nomes no padrao Iconify. Importar somente o necessario. Ma
 ## Dependencias
 
 - Inspecionar `package.json`, lockfile, scripts, configuracao de deploy e comandos de CI antes de classificar pacotes.
-- Colocar em `devDependencies` ferramentas necessarias somente para desenvolvimento e verificacao, como lint, formatacao, testes, typecheck, Lighthouse CI e utilitarios locais.
+- Colocar em `devDependencies` ferramentas necessarias somente para desenvolvimento e verificacao, como lint, formatacao, testes, typecheck e utilitarios locais.
 - Colocar em `dependencies` bibliotecas importadas pela aplicacao e pacotes exigidos durante o build, deploy ou runtime de producao, conforme o contrato real da infraestrutura.
 - Nao classificar um pacote apenas por ele aparecer ou nao no bundle do navegador. Considerar quando e onde ele precisa estar instalado.
 - Preservar a classificacao do template quando ela refletir uma pipeline valida. Corrigir pacotes mal classificados somente depois de verificar scripts, imports e processo de deploy.
